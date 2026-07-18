@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>Skincare — Geraldo</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --surface-raised: #1c1c1e;
+            --text: #f5f5f7;
+            --text-secondary: #8e8e93;
+            --text-tertiary: #636366;
+            --accent: #d4a574;
+            --accent-dim: rgba(212, 165, 116, 0.15);
+            --danger: #ff453a;
+            --success: #30d158;
+            --warning: #ff9f0a;
+            --border: rgba(255,255,255,0.08);
+            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg: #f5f5f7;
+                --surface: #ffffff;
+                --surface-raised: #ffffff;
+                --text: #1c1c1e;
+                --text-secondary: #636366;
+                --text-tertiary: #aeaeb2;
+                --accent: #b07d4b;
+                --accent-dim: rgba(176, 125, 75, 0.12);
+                --border: rgba(0,0,0,0.06);
+                --shadow: 0 8px 32px rgba(0,0,0,0.08);
+            }
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+        
+        .app {
+            max-width: 430px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-bottom: 120px;
+        }
+        
+        /* Header */
+        .header {
+            padding: 48px 24px 24px;
+            background: linear-gradient(180deg, var(--surface-raised) 0%, var(--bg) 100%);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .logo {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+        
+        .profile-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+        
+        .skin-tags {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .tag {
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 100px;
+            background: var(--accent-dim);
+            color: var(--accent);
+            font-weight: 500;
+            border: 1px solid var(--border);
+        }
+        
+        /* Navigation */
+        .nav {
+            display: flex;
+            gap: 8px;
+            padding: 0 24px;
+            margin: 24px 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .nav::-webkit-scrollbar { display: none; }
+        
+        .nav-btn {
+            flex-shrink: 0;
+            padding: 10px 20px;
+            border-radius: 100px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+        
+        .nav-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        
+        /* Sections */
+        .section {
+            display: none;
+            padding: 0 24px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .section.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--accent-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .card-icon svg {
+            width: 20px;
+            height: 20px;
+            color: var(--accent);
+        }
+        
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .card-meta {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        /* Steps */
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .step:last-child { border-bottom: none; padding-bottom: 0; }
+        .step:first-child { padding-top: 0; }
+        
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--text-tertiary);
+            flex-shrink: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            margin-top: 2px;
+        }
+        
+        .checkbox.checked {
+            background: var(--success);
+            border-color: var(--success);
+        }
+        
+        .checkbox svg { display: none; width: 14px; height: 14px; color: #fff; }
+        .checkbox.checked svg { display: block; }
+        
+        .step-content { flex: 1; }
+        
+        .step-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .step-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+        
+        .step-time {
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        
+        /* Products */
+        .product {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px;
+            background: var(--surface-raised);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border);
+        }
+        
+        .product-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: var(--accent-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .product-icon svg { width: 22px; height: 22px; color: var(--accent); }
+        
+        .product-info { flex: 1; }
+        
+        .product-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .product-detail {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .product-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: var(--accent-dim);
+            color: var(--accent);
+            font-weight: 500;
+        }
+        
+        /* Progress */
+        .progress-card {
+            background: linear-gradient(135deg, var(--accent-dim), transparent);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .progress-title { font-size: 17px; font-weight: 600; }
+        
+        .progress-week {
+            font-size: 13px;
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: var(--surface-raised);
+            border-radius: 100px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 100px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+        
+        .progress-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        /* Tips */
+        .tip {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .tip:last-child { border: none; padding-bottom: 0; }
+        .tip:first-child { padding-top: 0; }
+        
+        .tip-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--accent-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .tip-icon svg { width: 16px; height: 16px; color: var(--accent); }
+        
+        .tip-content { flex: 1; }
+        
+        .tip-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+        .tip-text { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+        
+        /* Bottom bar */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 430px;
+            margin: 0 auto;
+            padding: 16px 24px 32px;
+            background: linear-gradient(0deg, var(--bg) 60%, transparent);
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+        
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        
+        .btn:active { transform: scale(0.96); }
+        
+        /* Week selector */
+        .week-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .week-selector::-webkit-scrollbar { display: none; }
+        
+        .week-btn {
+            padding: 8px 16px;
+            border-radius: 100px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        
+        .week-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        
+        /* Routine cards */
+        .routine-block {
+            background: var(--surface);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+        }
+        
+        .routine-header {
+            padding: 16px 20px;
+            background: var(--accent-dim);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .routine-header svg { width: 18px; height: 18px; color: var(--accent); }
+        
+        .routine-header-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        .routine-body { padding: 16px 20px; }
+        
+        /* Streak */
+        .streak {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px;
+            background: var(--surface);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+        }
+        
+        .streak-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+        }
+        
+        .streak-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+        
+        /* Checklist */
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .checklist-item:last-child { border: none; }
+        
+        .checklist-box {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            border: 2px solid var(--text-tertiary);
+            flex-shrink: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .checklist-box.checked {
+            background: var(--success);
+            border-color: var(--success);
+        }
+        
+        .checklist-box svg { display: none; width: 12px; height: 12px; color: #fff; }
+        .checklist-box.checked svg { display: block; }
+        
+        .checklist-text {
+            font-size: 15px;
+            flex: 1;
+        }
+        
+        .checklist-text.checked { text-decoration: line-through; color: var(--text-tertiary); }
+        
+        /* Info badge */
+        .info-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--accent-dim);
+            border-radius: 8px;
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+        
+        .info-badge svg { width: 14px; height: 14px; }
+        
+        /* Responsive */
+        @media (max-width: 430px) {
+            .app { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <div class="logo">AUREA Wellness</div>
+                <div class="profile-badge">
+                    <div class="avatar">GM</div>
+                    <span>Geraldo</span>
+                </div>
+            </div>
+            <h1>Rutina de<br>Skincare</h1>
+            <p class="subtitle">Protocolo personalizado para piel mixta/grasa con tendencia al acné leve. Clima tropical Venezuela.</p>
+            <div class="skin-tags">
+                <span class="tag">40 años</span>
+                <span class="tag">Mixta/Grasa</span>
+                <span class="tag">Acné leve</span>
+                <span class="tag">Venezuela</span>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="nav">
+            <button class="nav-btn active" onclick="showSection('morning')">Mañana</button>
+            <button class="nav-btn" onclick="showSection('night')">Noche</button>
+            <button class="nav-btn" onclick="showSection('products')">Productos</button>
+            <button class="nav-btn" onclick="showSection('progress')">Progreso</button>
+        </div>
+        
+        <!-- MORNING SECTION -->
+        <div id="morning" class="section active">
+            <div class="info-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2m4.22-17.22l-1.42 1.42M6.2 17.8l-1.42 1.42M23 12h-2M3 12H1m17.22 4.22l-1.42-1.42M6.2 6.2L4.78 4.78"/></svg>
+                5-7 minutos · Control de sebo + Protección
+            </div>
+            
+            <div class="routine-block">
+                <div class="routine-header">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v1m0 16v1m8.66-12.66l-.71.71M4.05 16.95l-.71.71M21 12h-1M4 12H3m16.95 4.05l-.71-.71M4.05 7.05l-.71-.71"/></svg>
+                    <span class="routine-header-text">Rutina Matutina</span>
+                </div>
+                <div class="routine-body">
+                    <div class="step">
+                        <div class="checkbox" onclick="toggleCheck(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Limpieza</div>
+                            <div class="step-desc">Gel limpiador con ácido salicílico + vitamina B5 o niacinamida. Masajea suave enfocado en nariz y frente.</div>
+                            <div class="step-time">30 segundos</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="checkbox" onclick="toggleCheck(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Tratamiento</div>
+                            <div class="step-desc">2-3 gotas de sérum salicílico + niacinamida en todo el rostro. Espera 1-2 minutos.</div>
+                            <div class="step-time">1 minuto</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="checkbox" onclick="toggleCheck(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Hidratación</div>
+                            <div class="step-desc">Capa ligera de crema gel control grasa o aquagel hidratante.</div>
+                            <div class="step-time">30 segundos</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="checkbox" onclick="toggleCheck(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Protección Solar</div>
+                            <div class="step-desc">Bloqueador matificante SPF 50+ con ácido hialurónico. Generosa capa. Reaplica cada 2-3h si sudas.</div>
+                            <div class="step-time">30 segundos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    </div>
+                    <div>
+                        <div class="card-title">Consejos de aplicación</div>
+                        <div class="card-meta">Para máxima eficacia</div>
+                    </div>
+                </div>
+                <div class="tip">
+                    <div class="tip-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+                    </div>
+                    <div class="tip-content">
+                        <div class="tip-title">Manos limpias siempre</div>
+                        <div class="tip-text">Lávate las manos antes de cada aplicación</div>
+                    </div>
+                </div>
+                <div class="tip">
+                    <div class="tip-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                    </div>
+                    <div class="tip-content">
+                        <div class="tip-title">Movimiento ascendente</div>
+                        <div class="tip-text">Desde cuello hacia arriba, nunca arrastres hacia abajo</div>
+                    </div>
+                </div>
+                <div class="tip">
+                    <div class="tip-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <div class="tip-content">
+                        <div class="tip-title">Espera entre capas</div>
+                        <div class="tip-text">1-2 minutos entre cada producto para mejor absorción</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- NIGHT SECTION -->
+        <div id="night" class="section">
+            <div class="info-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                5-10 minutos · Reparación + Antiedad
+            </div>
+            
+            <div class="routine-block">
+                <div class="routine-header" style="background: rgba(100,100,255,0.1);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                    <span class="routine-header-text" style="color: #a5a5ff;">Rutina Nocturna</span>
+                </div>
+                <div class="routine-body">
+                    <div class="step">
+                        <div class="checkbox" onclick="toggleCheck(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Doble Limpieza</div>
+                            <div class="step-desc">Gel limpiador (doble si usaste protector/sudor). Agua tibia, seca dando toquecitos.</div>
+                            <div class="step-time">30-60 segundos</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="checkbox" onclick="toggleCheck(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Tratamiento Activo</div>
+                            <div class="step-desc">Sérum salicílico + niacinamida. En zonas de brotes: gel anti acné. Semana 3+: retinol 2-3 noches/semana.</div>
+                            <div class="step-time">1-2 minutos</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="checkbox" onclick="toggleCheck(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Hidratación</div>
+                            <div class="step-desc">Crema gel control grasa. Puede ser más generosa en mejillas si sientes tirantez.</div>
+                            <div class="step-time">30 segundos</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="checkbox" onclick="toggleCheck(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="step-content">
+                            <div class="step-title">Extra: Mascarilla (1x/semana)</div>
+                            <div class="step-desc">Exfoliación suave o mascarilla hidratante. No combines con retinol esa noche.</div>
+                            <div class="step-time">10-15 minutos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    </div>
+                    <div>
+                        <div class="card-title">Retinol — Protocolo de introducción</div>
+                        <div class="card-meta">Semanas 3 en adelante</div>
+                    </div>
+                </div>
+                <div class="step" style="padding: 10px 0;">
+                    <div class="step-content">
+                        <div class="step-title">Fase 1 (Semanas 3-4)</div>
+                        <div class="step-desc">2 noches/semana. Aplica sobre piel completamente seca. Espera 20 min tras limpieza.</div>
+                    </div>
+                </div>
+                <div class="step" style="padding: 10px 0;">
+                    <div class="step-content">
+                        <div class="step-title">Fase 2 (Semanas 5-6)</div>
+                        <div class="step-desc">3 noches/semana si no hay irritación. Alterna con niacinamida pura.</div>
+                    </div>
+                </div>
+                <div class="step" style="padding: 10px 0;">
+                    <div class="step-content">
+                        <div class="step-title">Fase 3 (Semana 7+)</div>
+                        <div class="step-desc">Puedes aumentar frecuencia según tolerancia. Si irrita: pausa 2 días, hidrata más.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PRODUCTS SECTION -->
+        <div id="products" class="section">
+            <div class="section-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                Productos recomendados
+            </div>
+            <div class="section-subtitle">Disponibles en Farmatodo Venezuela</div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    </div>
+                    <div class="card-title">Limpieza</div>
+                </div>
+                <div class="product">
+                    <div class="product-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Gel Limpiador Farmatodo</div>
+                        <div class="product-detail">Ácido Salicílico + Vitamina B5 · 120g</div>
+                    </div>
+                    <span class="product-tag">Esencial</span>
+                </div>
+                <div class="product">
+                    <div class="product-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Alternativa Nivea</div>
+                        <div class="product-detail">Purificante Efecto Mate · piel grasa</div>
+                    </div>
+                    <span class="product-tag">Alt</span>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </div>
+                    <div class="card-title">Tratamiento</div>
+                </div>
+                <div class="product">
+                    <div class="product-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Sérum Farmatodo</div>
+                        <div class="product-detail">Ácido Salicílico + Niacinamida · 30ml</div>
+                    </div>
+                    <span class="product-tag">Estrella</span>
+                </div>
+                <div class="product">
+                    <div class="product-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Gel Anti Acné</div>
+                        <div class="product-detail">Fórmulas Magistrales · Brotes puntuales</div>
+                    </div>
+                    <span class="product-tag">Spot</span>
+                </div>
+                <div class="product">
+                    <div class="product-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Retinol suave</div>
+                        <div class="product-detail">Farmatodo o fórmulas magistrales · Inicia semana 3</div>
+                    </div>
+                    <span class="product-tag">Noche</span>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                    </div>
+                    <div class="card-title">Hidratación & Protección</div>
+                </div>
+                <div class="product">
+                    <div class="product-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Crema Gel Control Grasa</div>
+                        <div class="product-detail">Farmatodo · Ácido salicílico + niacinamida · 50g</div>
+                    </div>
+                    <span class="product-tag">Día</span>
+                </div>
+                <div class="product">
+                    <div class="product-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2m4.22-17.22l-1.42 1.42M6.2 17.8l-1.42 1.42M23 12h-2M3 12H1m17.22 4.22l-1.42-1.42M4.05 7.05l-.71-.71"/></svg>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Bloqueador Solar SPF 50+</div>
+                        <div class="product-detail">Farmatodo Matificante · Ácido hialurónico · Toque seco</div>
+                    </div>
+                    <span class="product-tag">SPF</span>
+                </div>
+                <div class="product">
+                    <div class="product-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Alternativa Heliocare</div>
+                        <div class="product-detail">360 Oil-Free · SPF 50+</div>
+                    </div>
+                    <span class="product-tag">Alt</span>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </div>
+                    <div class="card-title">Extras útiles</div>
+                </div>
+                <div class="product">
+                    <div class="product-info">
+                        <div class="product-name">Parches anti-acné BACC</div>
+                        <div class="product-detail">Para brotes aislados</div>
+                    </div>
+                </div>
+                <div class="product">
+                    <div class="product-info">
+                        <div class="product-name">Agua micelar Nivea</div>
+                        <div class="product-detail">Piel mixta/grasa · Limpieza rápida</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PROGRESS SECTION -->
+        <div id="progress" class="section">
+            <div class="streak">
+                <div>
+                    <div class="streak-number" id="streakCount">0</div>
+                    <div class="streak-label">días consecutivos</div>
+                </div>
+            </div>
+            
+            <div class="progress-card">
+                <div class="progress-header">
+                    <span class="progress-title">Tu progreso</span>
+                    <span class="progress-week" id="progressWeek">Semana 1</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">Fase inicial: estableciendo hábito base</div>
+            </div>
+            
+            <div class="week-selector">
+                <button class="week-btn active" onclick="setWeek(1)">Sem 1-2</button>
+                <button class="week-btn" onclick="setWeek(3)">Sem 3+</button>
+                <button class="week-btn" onclick="setWeek(6)">Sem 6+</button>
+                <button class="week-btn" onclick="setWeek(12)">3 meses</button>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <div class="card-title">Checklist diario</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checklist-box" onclick="toggleChecklist(this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div class="checklist-text">Rutina mañana completa</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checklist-box" onclick="toggleChecklist(this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div class="checklist-text">Rutina noche completa</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checklist-box" onclick="toggleChecklist(this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div class="checklist-text">Reaplicación SPF (si expuesto)</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checklist-box" onclick="toggleChecklist(this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div class="checklist-text">2 litros de agua</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checklist-box" onclick="toggleChecklist(this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div class="checklist-text">No tocar la cara</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checklist-box" onclick="toggleChecklist(this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div class="checklist-text">7-8 horas de sueño</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
+                    </div>
+                    <div>
+                        <div class="card-title">Resultados esperados</div>
+                        <div class="card-meta">Con constancia diaria</div>
+                    </div>
+                </div>
+                <div class="step" style="padding: 10px 0;">
+                    <div class="step-content">
+                        <div class="step-title">Semana 2</div>
+                        <div class="step-desc">Menos brillo en zona T, sensación más limpia</div>
+                    </div>
+                </div>
+                <div class="step" style="padding: 10px 0;">
+                    <div class="step-content">
+                        <div class="step-title">Semana 4</div>
+                        <div class="step-desc">Poros más refinados, menos brotes activos</div>
+                    </div>
+                </div>
+                <div class="step" style="padding: 10px 0;">
+                    <div class="step-content">
+                        <div class="step-title">Semana 8</div>
+                        <div class="step-desc">Textura más uniforme, primera señal de firmeza</div>
+                    </div>
+                </div>
+                <div class="step" style="padding: 10px 0;">
+                    <div class="step-content">
+                        <div class="step-title">Semana 12</div>
+                        <div class="step-desc">Piel visiblemente más juvenil, luminosa, control total de sebo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Bar -->
+        <div class="bottom-bar">
+            <button class="btn btn-secondary" onclick="resetAll()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+                Reset
+            </button>
+            <button class="btn btn-primary" onclick="shareProgress()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                Guardar
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // Navigation
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // Checkboxes
+        function toggleCheck(el) {
+            el.classList.toggle('checked');
+            saveState();
+        }
+        
+        function toggleChecklist(el) {
+            el.classList.toggle('checked');
+            el.nextElementSibling.classList.toggle('checked');
+            updateStreak();
+            saveState();
+        }
+        
+        // Week selector
+        function setWeek(week) {
+            document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const fill = document.getElementById('progressFill');
+            const text = document.getElementById('progressText');
+            const weekLabel = document.getElementById('progressWeek');
+            
+            const phases = {
+                1: { pct: 15, text: 'Fase inicial: limpiador + sérum + hidratante + SPF', label: 'Semana 1-2' },
+                3: { pct: 35, text: 'Fase activa: introduces retinol 2-3 noches/semana', label: 'Semana 3+' },
+                6: { pct: 60, text: 'Fase consolidación: ajustas frecuencia de retinol', label: 'Semana 6+' },
+                12: { pct: 100, text: 'Fase mantenimiento: resultados visibles establecidos', label: '3 meses' }
+            };
+            
+            fill.style.width = phases[week].pct + '%';
+            text.textContent = phases[week].text;
+            weekLabel.textContent = phases[week].label;
+        }
+        
+        // Streak counter
+        function updateStreak() {
+            const checked = document.querySelectorAll('.checklist-box.checked').length;
+            document.getElementById('streakCount').textContent = checked;
+        }
+        
+        // Reset
+        function resetAll() {
+            if(confirm('¿Reiniciar todo el progreso de hoy?')) {
+                document.querySelectorAll('.checkbox, .checklist-box').forEach(el => {
+                    el.classList.remove('checked');
+                });
+                document.querySelectorAll('.checklist-text').forEach(el => {
+                    el.classList.remove('checked');
+                });
+                updateStreak();
+                saveState();
+            }
+        }
+        
+        // Share/Save
+        function shareProgress() {
+            const data = {
+                date: new Date().toLocaleDateString('es-VE'),
+                streak: document.getElementById('streakCount').textContent,
+                checks: document.querySelectorAll('.checkbox.checked, .checklist-box.checked').length
+            };
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Mi rutina skincare',
+                    text: `Día ${data.streak}/6 completado · ${data.checks} pasos hechos`
+                });
+            } else {
+                alert('Progreso guardado localmente en tu iPhone');
+            }
+        }
+        
+        // Save/Load state
+        function saveState() {
+            const state = {
+                checks: Array.from(document.querySelectorAll('.checkbox.checked, .checklist-box.checked')).map(el => {
+                    const items = Array.from(document.querySelectorAll('.checkbox, .checklist-box'));
+                    return items.indexOf(el);
+                })
+            };
+            localStorage.setItem('skincare_geraldo', JSON.stringify(state));
+        }
+        
+        function loadState() {
+            try {
+                const saved = localStorage.getItem('skincare_geraldo');
+                if (saved) {
+                    const state = JSON.parse(saved);
+                    const items = document.querySelectorAll('.checkbox, .checklist-box');
+                    state.checks.forEach(idx => {
+                        if (items[idx]) items[idx].classList.add('checked');
+                    });
+                    updateStreak();
+                }
+            } catch(e) {}
+        }
+        
+        // Init
+        loadState();
+        updateStreak();
+        
+        // Auto-set week based on first visit
+        if (!localStorage.getItem('skincare_start')) {
+            localStorage.setItem('skincare_start', Date.now());
+        }
+        
+        const daysSince = Math.floor((Date.now() - parseInt(localStorage.getItem('skincare_start'))) / 86400000);
+        const currentWeek = Math.min(12, Math.max(1, Math.floor(daysSince / 7) + 1));
+        
+        // PWA Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:text/javascript,').catch(() => {});
+        }
+    </script>
+</body>
+</html>
